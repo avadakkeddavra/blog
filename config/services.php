@@ -34,9 +34,9 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-    'google' => [
-        'client_id' => '723160927970-cil33tpr3hfmttju0iukmskb97288tur.apps.googleusercontent.com',
-        'client_secret' => '1QEgZ7MZVlb9-b-UmBTY6y_b',
-        'redirect' => 'http://light-it.loc/auth/google',
+    'github' => [
+        'client_id' => 'ab3ec8812e10693b4173',
+        'client_secret' => '682ee45bb156d3e29c90173a41f94b18bec52870',
+        'redirect' => 'http://light-it.loc/auth/github/callback',
     ],
 ];

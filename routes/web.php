@@ -11,6 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/auth/{provider}',
+    [ 
+        '‘as’' => '‘socialite.auth’',
+        function ( $provider ) {
+            return \Socialite::driver( $provider )->redirect();
+        }
+    ]
+);
+Route::get('/auth/{provider}/callback','LoginController@login');
+
+Route::get('/login','LoginController@index')->name('login');
+
+ROute::get('/','HomeCOntroller@inedx')->name('home');
