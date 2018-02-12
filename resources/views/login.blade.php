@@ -1,6 +1,20 @@
-@extends('layouts.app')
-@section('custom_styles')
-            <style>
+<!doctype html>
+<html lang="{{ app()->getLocale() }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Laravel</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&amp;subset=cyrillic" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.css') }} ">
+        <link rel="stylesheet" href="{{ asset('plugins/font-awesome-4.7.0/css/font-awesome.css') }}">
+        
+        <!-- Styles -->
+        <style>
             html, body {
                 background-color: #fff;
                 color: #636b6f;
@@ -52,15 +66,12 @@
                 margin-bottom: 30px;
             }
         </style>
-
-@endsection
-@section('content')
-
+<body>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">                   
                         <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('home') }}">Home</a>
+                        <a href="{{ route('feed') }}">Feed</a>
                 </div>
             @endif
 
@@ -74,4 +85,11 @@
                 </div>
             </div>
         </div>
-@endsection
+
+
+</body>
+</html>
+
+
+
+

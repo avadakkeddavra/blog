@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder
         		'id' => $i+1,
         		'name' => $faker->name,
         		'email' => $faker->email,
-                'img' => asset('img').'/user.png',
+                'img' => 'img/user.png',
         		'password' => $faker->password,
         		'created_at' => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = null) 
         	]);

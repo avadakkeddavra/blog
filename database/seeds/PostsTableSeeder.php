@@ -15,7 +15,7 @@ class PostsTableSeeder extends Seeder
     public function run()
     {
         DB::table('posts')->delete();
-
+        DB::table('comments')->delete();
         $faker =  Faker::create();
 
         for($i = 0; $i < 100; $i ++){
@@ -24,9 +24,27 @@ class PostsTableSeeder extends Seeder
         		'name' => $faker->sentence($nbWords = 4, $variableNbWords = true),
         		'text' => $faker->text,
         		'user_id' => $faker->numberBetween($min = 1, $max = 10),
-        		'img' => asset('img/post_images').'/images.jpg',
+        		'img' => 'img/post_images/008ef7a.jpg',
         		'created_at' => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = null) 
         	]);
+            for($j = 0; $j < 2; $j++)
+            {
+                if($j == 0)
+                {
+                    $parent_id = null;
+                }else{
+                    $parent_id = (($i+1)*2)-1;
+                }
+                $comment = DB::table('comments')->insert([
+                    'text' => $faker->text,
+                    'user_id' => $faker->numberBetween($min = 1, $max = 10),
+                    'post_id' => $i+1,
+                    'parent_id' => $parent_id,
+                    'created_at' => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = null) 
+                ]);
+                
+            }
+
         }
     }
 }

@@ -1,6 +1,4 @@
-@extends('layouts.app')
 
-@section('content')
 
 @php
 
@@ -14,7 +12,7 @@ function comments($arr, $parent_id = null){
     	for($i = 0; $i < count($arr[$parent_id]); $i++)
     	{
     		$item = $arr[$parent_id][$i];
-    		if(\Auth::user()->id == $item->user->id)
+    		if(!\Auth::guest() && \Auth::user()->id == $item->user->id)
     		{
 
 
@@ -53,7 +51,7 @@ function comments($arr, $parent_id = null){
 						                            </div>
 
 						                            <div class="comment_footer">
-						                                <span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
+						                                
 						                            </div>
 						                           
 						                         
@@ -69,16 +67,9 @@ function comments($arr, $parent_id = null){
 }
 
 @endphp
-
-            			<div class="preloader top">
-				<div class="spin"></div>
-			</div>
-            <div class="posts_container">
-				@if(!isset($posts[0]))
-					<h2 class="nothing"><i class="fa fa-code"></i><br/>Nothing to show</h2>
-				@endif
-            	@foreach($posts as $post)
-					                <div class="post box" data-id="{{ $post->id }}" data-time="{{ $post->created_at }}">
+							
+								@foreach($posts as $post)
+					                <div class="post new box" data-id="{{ $post->id }}" data-time="{{ $post->created_at }}"> 
 						                    <div class="post_header">
 						                        <img src="{{ $post->user->img }}" alt="" class="img-responsive">
 						                        <div class="user_info">
@@ -97,10 +88,11 @@ function comments($arr, $parent_id = null){
 						                    </div>
 						                    <div class="post_footer">
 						                        <span class="comments"><i class="fa fa-comment"></i>{{ count($post->comments) }}</span>
+						                        
 						                        @auth
-							                        <span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
+						                        <span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
 							                        @if(\Auth::user()->id == $post->user_id)
-							                        <span class="delete-it" data-id="{{ $post->id }}" data-type="post"><i class="fa fa-pencil"></i> delete it</span>
+							                        	<span class="delete-it" data-id="{{ $post->id }}" data-type="post"><i class="fa fa-pencil"></i> delete it</span>
 							                        @endif
 						                        @endauth
 						                    </div>
@@ -108,7 +100,7 @@ function comments($arr, $parent_id = null){
 												$comments = $post->comments->groupBy('parent_id'); 
 											@endphp
 
-										
+											
 											<div class="comments_container">
 												<div class="comments">
 													{{ comments($comments) }}
@@ -121,46 +113,4 @@ function comments($arr, $parent_id = null){
 											</div>
 											
 						                </div>
-           		@endforeach
-
-            </div>
-            	<div class="preloader bottom">
-				<div class="spin"></div>
-			</div>
-
-			@if(isset($posts[0]))
-				<button class="btn btn-primary" id="loadmore">loadmore</button>
-			@endif
-             
-@endsection
-@section('custom_scripts')
-<script>
-			$('#loadmore').on('click',function(){
-			var last = $('.post').last().data('time');
-			$.ajax({
-				url:'/post/loadmore',
-				data:{id:last,type:'home'},
-				type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                	$('#newPosts').fadeOut();
-                	$('.posts_container').append(response);
-					$('.preloader.bottom').fadeIn(200);
-					setTimeout(function(){
-						$('.wall').find('.posts_container').find('.new').each(function(i,elem){
-							$(this).fadeIn(200);
-							$(this).css({
-								transform:'scale(1)'
-							});
-						});
-						$('.preloader').fadeOut();
-						
-					},1000)                
-				}
-			});
-		})
-</script>
-<script src="{{ asset('js/post.js') }}"></script>
-@endsection
+      							@endforeach

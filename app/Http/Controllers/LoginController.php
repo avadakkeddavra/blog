@@ -10,7 +10,15 @@ use App\User;
 
 class LoginController extends Controller
 {
-	
+	use AuthenticatesUsers;
+
+
+	public function __construct()
+	{
+		$this->middleware('guest');
+	}	
+
+
 	public function index()
 	{
 		return view('login');
@@ -28,7 +36,7 @@ class LoginController extends Controller
 
 		\Auth::loginUsingId($user->id, true);
 
-		dd(\Auth::user());
+		return redirect('/feed');
 	}
 
 }

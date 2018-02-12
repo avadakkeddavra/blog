@@ -14,7 +14,7 @@ function comments($arr, $parent_id = null){
     	for($i = 0; $i < count($arr[$parent_id]); $i++)
     	{
     		$item = $arr[$parent_id][$i];
-    		if(\Auth::user()->id == $item->user->id)
+    		if(!\Auth::guest() && \Auth::user()->id == $item->user->id)
     		{
 
 
@@ -53,7 +53,7 @@ function comments($arr, $parent_id = null){
 						                            </div>
 
 						                            <div class="comment_footer">
-						                                <span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
+						                                 <span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
 						                            </div>
 						                           
 						                         
@@ -70,9 +70,10 @@ function comments($arr, $parent_id = null){
 
 @endphp
 
-            			<div class="preloader top">
+			<button id="newPosts" style="display: none;">new <span >5</span></button>       
+					<div class="preloader top">
 				<div class="spin"></div>
-			</div>
+			</div>     
             <div class="posts_container">
 				@if(!isset($posts[0]))
 					<h2 class="nothing"><i class="fa fa-code"></i><br/>Nothing to show</h2>
@@ -97,8 +98,9 @@ function comments($arr, $parent_id = null){
 						                    </div>
 						                    <div class="post_footer">
 						                        <span class="comments"><i class="fa fa-comment"></i>{{ count($post->comments) }}</span>
+						                        
 						                        @auth
-							                        <span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
+						                        	<span class="comment-it"><i class="fa fa-pencil"></i> comment it</span>
 							                        @if(\Auth::user()->id == $post->user_id)
 							                        <span class="delete-it" data-id="{{ $post->id }}" data-type="post"><i class="fa fa-pencil"></i> delete it</span>
 							                        @endif
@@ -122,24 +124,54 @@ function comments($arr, $parent_id = null){
 											
 						                </div>
            		@endforeach
-
+				
             </div>
             	<div class="preloader bottom">
 				<div class="spin"></div>
 			</div>
-
-			@if(isset($posts[0]))
-				<button class="btn btn-primary" id="loadmore">loadmore</button>
-			@endif
-             
+            <button id="loadmore"><i class="fa fa-paper-plane"></i>loadmore</button>
 @endsection
 @section('custom_scripts')
 <script>
+	localStorage.setItem('last_post','{{ $posts[0]->created_at }}');
+	$(document).ready(function(){
+
+		$('#newPosts').on('click',function(){
+			var last = '{{ $posts[0]->created_at }}';
+			$.ajax({
+				url:'/feed/uploadNew',
+				data:{id:last},
+				type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                	$('#newPosts').fadeOut();
+                	$('.posts_container').prepend(response);
+					$('.preloader.top').fadeIn(200);
+					setTimeout(function(){
+						$('.wall').find('.posts_container').find('.new').each(function(i,elem){
+							$(this).fadeIn(200);
+							$(this).css({
+								transform:'scale(1)'
+							});
+						});
+						$('.preloader').fadeOut();
+						$()
+						localStorage.setItem('last_post',$('.wall').find('.posts_container').find('.new').data('time'));
+					},1000)                
+				}
+			})
+		})
+	})
+</script>
+<script>
+	
 			$('#loadmore').on('click',function(){
 			var last = $('.post').last().data('time');
 			$.ajax({
 				url:'/post/loadmore',
-				data:{id:last,type:'home'},
+				data:{id:last,type:'feed'},
 				type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
