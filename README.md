@@ -1,5 +1,5 @@
 # blog
-LightIT test task. Based on Laravel Framework
+Based on Laravel Framework
 
 # To init a project
 Запустить composer, настроить подключение к БД в .env. Запустить мигарции и сиды;
